@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Language Detection</h1>
+        <p class="subtitle">Enter text below to detect its language.</p>
+        <textarea id="textInput" placeholder="Type or paste your text here..."></textarea>
+        <button onclick="detectLanguage()">Detect Language</button>
+        <div class="result">
+            <h3>Predicted Language: <span id="result">-</span></h3>
+        </div>
+    </div>
+
+    <script>
+        function detectLanguage() {
+            let text = document.getElementById("textInput").value;
+            
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = data.language || data.error;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
